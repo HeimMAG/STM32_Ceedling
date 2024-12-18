@@ -1,0 +1,163 @@
+:project:
+  :use_exceptions: FALSE
+  :use_test_preprocessor: :all
+  :use_auxiliary_dependencies: TRUE
+  :build_root: build
+  :release_build: TRUE
+  :test_file_prefix: test_
+  :which_ceedling: gem
+  :ceedling_version: 0.31.1
+  :default_tasks:
+    - test:all
+
+#:test_build:
+# :use_assembly: TRUE
+
+:release_build:
+  :output: stmBase
+  :use_assembly: TRUE
+  :artifacts:
+    - stmBase.map
+
+# :output: MyApp.out
+# :use_assembly: FALSE
+
+:environment:
+
+:extension:
+  :executable: .elf
+
+:paths:
+  :test:
+    - +:test/**
+    - -:test/support
+  :source:
+    - Core/Inc/**
+    - Core/Src/**
+  :include:
+    - Core/Inc/
+    - Drivers/CMSIS/Device/ST/STM32F4xx/Include/
+    - Drivers/CMSIS/Include/
+    - Drivers/STM32F4xx_HAL_Driver/Inc/
+  :toolchain_include:
+    - USB_HOST/App
+    - USB_HOST/Target
+    - Core/Inc
+    - build/vendor/unity/src
+    - Drivers/STM32F4xx_HAL_Driver/Inc
+    - Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+    - Middlewares/ST/STM32_USB_Host_Library/Core/Inc
+    - Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc
+    - Drivers/CMSIS/Device/ST/STM32F4xx/Include
+    - Drivers/CMSIS/Include
+  :support:
+    - test/support
+
+  :libraries: []
+
+# :exclude_files:
+#   - Core\Src\main.c
+
+:defines:
+  :common: &common_defines
+    - STM32F407xx
+    - USE_HAL_DRIVER
+  :test:
+    - *common_defines
+    - TEST
+  :test_preprocess:
+    - *common_defines
+    - TEST
+
+:cmock:
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: TRUE
+  :plugins:
+    - :ignore
+    - :callback
+  :treat_as:
+    uint8: HEX8
+    uint16: HEX16
+    uint32: UINT32
+    int8: INT8
+    bool: UINT8
+  # TODO: herausfinden, ob das richtig ist.
+  :includes:
+    - <stdbool.h>
+    - <stdint.h>
+  :treat_externs: :include
+
+:gcov:
+  :reports:
+    - HtmlDetailed
+  :gcovr:
+    :html_medium_threshold: 75
+    :html_high_threshold: 90
+
+:tools:
+  :test_compiler:
+    :executable: arm-none-eabi-gcc
+    :arguments:
+      - ${1}
+      - -mcpu=cortex-m4
+      - -std=gnu11
+      - -g3
+      - -DDEBUG
+      - -DUSE_HAL_DRIVER
+      - -DSTM32F407xx
+      - -c
+      - -I"$": COLLECTION_PATHS_TOOLCHAIN_INCLUDE
+      - -O0
+      - -ffunction-sections
+      - -fdata-sections
+      - -Wall
+      - -fstack-usage
+      - -fcyclomatic-complexity
+      - -MMD
+      - -MP
+      - -MF"${2}.d"
+      - -MT"${2}.o"
+      - --specs=nano.specs
+      - -mfpu=fpv4-sp-d16
+      - -mfloat-abi=hard
+      - -mthumb
+      - -o ${2}
+
+  :test_linker:
+    :executable: arm-none-eabi-gcc
+    :arguments:
+      - ${1}
+      - -DTARGET
+      - -Isrc/
+      - -I"$": COLLECTION_PATHS_RELEASE_TOOLCHAIN_INCLUDE
+      - -mcpu=cortex-m4
+      - -mthumb
+      - -mfpu=fpv4-sp-d16
+      - -mfloat-abi=hard
+      - -Wl,-Map="${2}.map"
+      - -g
+      - -T"STM32F407VGTX_FLASH.ld"
+      - --specs=nosys.specs
+      - -Wl,--gc-sections
+      - -static
+      - --specs=nano.specs
+      - -Wl,--start-group -lc -lm -Wl,--end-group
+      - -o ${2}.elf
+
+:libraries:
+  :placement: :end
+
+  :flag: "-l${1}"
+
+  :path_flag: "-L ${1}"
+
+  :system: []
+
+  :test: []
+
+  :release: []
+
+:plugins:
+  :load_paths: []
+  :enabled: []

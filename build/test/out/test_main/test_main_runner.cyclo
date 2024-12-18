@@ -1,0 +1,9 @@
+build/test/runners/test_main_runner.c:20:13:CMock_Init	1
+build/test/runners/test_main_runner.c:26:13:CMock_Verify	1
+build/test/runners/test_main_runner.c:29:13:CMock_Destroy	1
+build/test/runners/test_main_runner.c:34:6:setUp	1
+build/test/runners/test_main_runner.c:37:6:tearDown	1
+build/test/runners/test_main_runner.c:41:6:resetTest	1
+build/test/runners/test_main_runner.c:50:6:verifyTest	1
+build/test/runners/test_main_runner.c:56:13:run_test	3
+build/test/runners/test_main_runner.c:84:6:main	1
