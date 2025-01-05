@@ -1,7 +1,0 @@
-build/test/runners/test_sys_runner.c:18:13:CMock_Init	1
-build/test/runners/test_sys_runner.c:24:13:CMock_Verify	1
-build/test/runners/test_sys_runner.c:27:13:CMock_Destroy	1
-build/test/runners/test_sys_runner.c:33:6:resetTest	1
-build/test/runners/test_sys_runner.c:42:6:verifyTest	1
-build/test/runners/test_sys_runner.c:48:13:run_test	3
-build/test/runners/test_sys_runner.c:76:6:main	1
